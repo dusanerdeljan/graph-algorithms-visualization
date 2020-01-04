@@ -6,11 +6,11 @@ Currently supported algorithms:
  * Prim-Jarnik
  * Kruskal
  
-## Kruskal algorithm visualization
+## Kruskal algorithm visualization example
 
 !["Kruskal algorithm visualization"](GIFs/kruskal.gif)
 
-## Prim-Jarnik algorithm visualization
+## Prim-Jarnik algorithm visualization example
 
 !["Prim-Jarnik algorithm visualization"](GIFs/prim-jarnik.gif)
  
