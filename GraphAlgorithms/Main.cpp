@@ -39,6 +39,15 @@ private:
 		float newY = ORIGIN_Y + CIRCLE_RADIUS * sinf(angle);
 		return { (size_t)newX, (size_t)newY };
 	}
+	void DrawEdge(const Graph::Edge& edge, olc::Pixel lineColor, olc::Pixel textColor)
+	{
+		auto posA = GetPosition(edge.vertexA - 1);
+		auto posB = GetPosition(edge.vertexB - 1);
+		DrawLine(posA.first, posA.second-1, posB.first, posB.second-1, lineColor);
+		DrawLine(posA.first, posA.second, posB.first, posB.second, lineColor);
+		DrawLine(posA.first, posA.second+1, posB.first, posB.second+1, lineColor);
+		DrawString((posA.first + posB.first) / 2, (posA.second + posB.second) / 2, std::to_string(edge.cost), textColor, 2);
+	}
 public:
 	GraphAlgorithms(Graph *graph) : m_Graph(graph)
 	{
@@ -60,20 +69,14 @@ public:
 		{
 			for (const auto& edge : m_Graph->m_Edges)
 			{
-				auto posA = GetPosition(edge.vertexA - 1);
-				auto posB = GetPosition(edge.vertexB - 1);
-				DrawLine(posA.first, posA.second, posB.first, posB.second, olc::GREY);
-				DrawString((posA.first + posB.first) / 2, (posA.second + posB.second) / 2, std::to_string(edge.cost), olc::WHITE, 2);
+				DrawEdge(edge, olc::GREY, olc::WHITE);
 			}
 		}
 		// Draw MST
 		for (size_t i = 0; i <= m_CurrentIndex; i++)
 		{
 			if (m_CurrentIndex == -1) break;
-			auto posA = GetPosition(m_Mst[i].vertexA - 1);
-			auto posB = GetPosition(m_Mst[i].vertexB - 1);
-			DrawLine(posA.first, posA.second, posB.first, posB.second, m_EdgeIncluded[i] ? olc::GREEN : animationFinished ? olc::BLACK : olc::RED);
-			DrawString((posA.first + posB.first) / 2, (posA.second + posB.second) / 2, std::to_string(m_Mst[i].cost), m_EdgeIncluded[i] ? olc::WHITE : animationFinished ? olc::BLACK : olc::WHITE, 2);
+			DrawEdge(m_Mst[i], m_EdgeIncluded[i] ? olc::GREEN : animationFinished ? olc::BLACK : olc::RED, m_EdgeIncluded[i] ? olc::WHITE : animationFinished ? olc::BLACK : olc::WHITE);
 			std::string edgeAdded = std::to_string(m_Mst[m_CurrentIndex].vertexA) + " -> " + std::to_string(m_Mst[m_CurrentIndex].vertexB);
 			if (!animationFinished)
 				DrawString(ScreenWidth() - 120, STRING_OFFSET, edgeAdded, m_EdgeIncluded[m_CurrentIndex] ? olc::GREEN : olc::RED, 2);
