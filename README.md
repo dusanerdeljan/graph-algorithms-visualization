@@ -5,6 +5,15 @@ Graph algorithms visualization made using olcPixelGameEngine (Visual Studio 2015
 Currently supported algorithms:
  * Prim-Jarnik
  * Kruskal
+ 
+## Kruskal algorithm visualization
+
+!["Kruskal algorithm visualization"](GIFs/kruskal.gif)
+
+## Prim-Jarnik algorithm visualization
+
+!["Prim-Jarnik algorithm visualization"](GIFs/prim-jarnik.gif)
+ 
 ## Controls
 
 Press `Enter` to move to the next frame of the animation. <br/>
