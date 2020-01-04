@@ -53,7 +53,7 @@ public:
 		Clear(olc::BLACK);
 #if USER_ANIMATION_CONTROL
 		if (!animationFinished)
-			DrawString(5, 5, "Press <<Enter>> for next step", olc::WHITE, 2);
+			DrawString(STRING_OFFSET, STRING_OFFSET, "Press <<Enter>> for next step", olc::WHITE, 2);
 #endif
 		// Draw edges
 		if (!animationFinished)
@@ -74,6 +74,9 @@ public:
 			auto posB = GetPosition(m_Mst[i].vertexB - 1);
 			DrawLine(posA.first, posA.second, posB.first, posB.second, m_EdgeIncluded[i] ? olc::GREEN : animationFinished ? olc::BLACK : olc::RED);
 			DrawString((posA.first + posB.first) / 2, (posA.second + posB.second) / 2, std::to_string(m_Mst[i].cost), m_EdgeIncluded[i] ? olc::WHITE : animationFinished ? olc::BLACK : olc::WHITE, 2);
+			std::string edgeAdded = std::to_string(m_Mst[m_CurrentIndex].vertexA) + " -> " + std::to_string(m_Mst[m_CurrentIndex].vertexB);
+			if (!animationFinished)
+				DrawString(ScreenWidth() - 120, STRING_OFFSET, edgeAdded, m_EdgeIncluded[m_CurrentIndex] ? olc::GREEN : olc::RED, 2);
 		}
 		// Draw vertices
 		for (size_t vertex = 0; vertex < m_Graph->m_VertexCount; vertex++)
