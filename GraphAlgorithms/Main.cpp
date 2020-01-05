@@ -22,6 +22,8 @@
 
 #if DRAW_MAZE
 #define TIME_BETWEEN_FRAMES 0.02f
+#define MAZE_GRAPH_VERTICES 30
+#define VERTEX_SCALE 12
 #else
 #define TIME_BETWEEN_FRAMES 1.0f
 #endif
@@ -83,6 +85,11 @@ public:
 	{
 		bool animationFinished = m_CurrentIndex == m_Mst.size() - 1;
 		Clear(olc::BLACK);
+		// Draw screen edges
+		DrawLine(0, 0, ScreenWidth()-1, 0, olc::BLUE);
+		DrawLine(0, ScreenHeight()-1, ScreenWidth()-1, ScreenHeight()-1, olc::BLUE);
+		DrawLine(0, 0, 0, ScreenHeight()-1, olc::BLUE);
+		DrawLine(ScreenWidth()-1, 0, ScreenWidth()-1, ScreenHeight()-1, olc::BLUE);
 		// Draw edges
 		for (auto const& edge : m_Graph->m_Edges)
 		{
@@ -252,10 +259,10 @@ void BuildGridGraph(Graph* graph)
 int main()
 {
 #if DRAW_MAZE
-	Graph graph(30 * 30);
+	Graph graph(MAZE_GRAPH_VERTICES*MAZE_GRAPH_VERTICES);
 	BuildGridGraph(&graph);
 	GraphAlgorithms demo(&graph);
-	if (demo.Construct(61, 61, 12, 12))
+	if (demo.Construct(2* MAZE_GRAPH_VERTICES+1, 2* MAZE_GRAPH_VERTICES+1, VERTEX_SCALE, VERTEX_SCALE))
 		demo.Start();
 #else
 	Graph graph(9); // Build example graph with 9 vertices
