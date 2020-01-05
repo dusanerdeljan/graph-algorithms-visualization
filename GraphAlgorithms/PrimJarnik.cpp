@@ -14,7 +14,7 @@ struct PQEntry
 	PQEntry(size_t c, size_t v, Graph::Edge* e) : cost(c), vertex(v), edge(e) {}
 };
 
-void PrimJarnik::MST(std::vector<Graph::Edge>& mst, std::vector<bool>& edgeIncluded)
+void PrimJarnik::MST(std::vector<Graph::Edge>& mst, std::vector<bool>& edgeIncluded, bool maze)
 {
 	std::unordered_map<size_t, size_t> treeBounds;
 	std::vector<PQEntry*> priorityQueue;
