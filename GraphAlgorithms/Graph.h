@@ -23,6 +23,7 @@ public:
 	Graph(size_t vertextCount);
 	~Graph();
 	void AddEdge(size_t firstVertex, size_t secondVertext, size_t cost);
+	void AddEdge(Graph::Edge* edge);
 	void GetIncidentEdges(size_t vertex, std::vector<Graph::Edge>& edges) const;
 	friend std::ostream& operator << (std::ostream& out, const Graph& graph);
 };

@@ -28,6 +28,11 @@ void Graph::AddEdge(size_t firstVertex, size_t secondVertext, size_t cost)
 	m_Edges.push_back(Edge(firstVertex, secondVertext, cost));
 }
 
+void Graph::AddEdge(Graph::Edge * edge)
+{
+	AddEdge(edge->vertexA, edge->vertexB, edge->cost);
+}
+
 void Graph::GetIncidentEdges(size_t vertex, std::vector<Graph::Edge>& edges) const
 {
 	vertex -= 1;

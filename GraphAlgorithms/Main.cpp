@@ -4,6 +4,9 @@
 #include "MSTAlgorithm.h"
 #include "Kruskal.h"
 #include "PrimJarnik.h"
+#include "PathfindingAlgorithm.h"
+#include "BFS.h"
+#include "DFS.h"
 #include <iostream>
 #include <math.h>
 #include <memory>
@@ -24,11 +27,14 @@
 #define TIME_BETWEEN_FRAMES 0.02f
 #define MAZE_GRAPH_VERTICES 30
 #define VERTEX_SCALE 12
+#define START_VERTEX MAZE_GRAPH_VERTICES*MAZE_GRAPH_VERTICES+1
+#define END_VERTEX START_VERTEX+1
 #else
 #define TIME_BETWEEN_FRAMES 1.0f
 #endif
 
 enum class Algorithm {PRIM_JARNIK, KRUSKAL};
+enum class Pathfinding { BFS, DFS };
 
 class GraphAlgorithms : public olc::PixelGameEngine
 {
@@ -42,16 +48,29 @@ private:
 	size_t m_CurrentIndex = -1;
 	std::set<size_t> m_VertexSet;
 	float m_Time = TIME_BETWEEN_FRAMES;
+	Graph* m_Maze;
+#if DRAW_MAZE
+	std::vector<size_t> m_MazePath;
+	std::vector<Graph::Edge> m_EdgesExplored;
+	std::unique_ptr<PathfindingAlgorithm> m_PathfindingAlgorithm;
+	Pathfinding m_PathType = Pathfinding::DFS;
+	size_t m_PathCurrentIndex = -1;
+#endif
 private:
 	std::pair<size_t, size_t> GetPosition(size_t vertex)
 	{
 #if DRAW_MAZE
-		size_t ROOT = (size_t)sqrt(m_Graph->m_VertexCount);
+		size_t ROOT = (size_t)sqrt(m_Graph->m_VertexCount-2);
 		size_t dW = ScreenWidth() / (ROOT - 1);
 		size_t dH = ScreenHeight() / (ROOT - 1);
 		size_t startX = 1;
 		size_t startY = 1;
-		return{ startX + (vertex%ROOT)*dW, startY + (vertex/ROOT)*dH };
+		if (vertex == START_VERTEX-1)
+			return{ startX, 0 };
+		else if (vertex == END_VERTEX-1)
+			return{ startX + (MAZE_GRAPH_VERTICES- 1)*dW , ScreenHeight()-1 };
+		else
+			return{ startX + (vertex%ROOT)*dW, startY + (vertex /ROOT)*dH };
 #else
 		float angle = vertex * m_Angle;
 		float newX = ORIGIN_X + CIRCLE_RADIUS * cosf(angle);
@@ -85,16 +104,6 @@ public:
 	{
 		bool animationFinished = m_CurrentIndex == m_Mst.size() - 1;
 		Clear(olc::BLACK);
-		// Draw screen edges
-		DrawLine(0, 0, ScreenWidth()-1, 0, olc::BLUE);
-		DrawLine(0, ScreenHeight()-1, ScreenWidth()-1, ScreenHeight()-1, olc::BLUE);
-		DrawLine(0, 0, 0, ScreenHeight()-1, olc::BLUE);
-		DrawLine(ScreenWidth()-1, 0, ScreenWidth()-1, ScreenHeight()-1, olc::BLUE);
-		// Draw edges
-		for (auto const& edge : m_Graph->m_Edges)
-		{
-			DrawEdge(edge, olc::BLACK);
-		}
 		// Draw MST
 		for (size_t i = 0; i <= m_CurrentIndex; i++)
 		{
@@ -111,7 +120,26 @@ public:
 		for (size_t vertex : m_VertexSet)
 		{
 			auto position = GetPosition(vertex);
-			Draw(position.first, position.second, olc::WHITE);
+			Draw(position.first, position.second, vertex >= START_VERTEX-1 ? olc::GREEN : olc::WHITE);
+		}
+		if (animationFinished)
+		{
+			// Draw explored edges
+			for (size_t i = 0; i <= m_PathCurrentIndex; i++)
+			{
+				if (m_PathCurrentIndex == -1) break;
+				DrawEdge(m_EdgesExplored[i], olc::BLUE);
+			}
+			if (m_PathCurrentIndex == m_EdgesExplored.size()-1)
+			{
+				// Draw path
+				for (size_t i = m_MazePath.size() - 1; i > 0; i--)
+				{
+					size_t first = m_MazePath[i];
+					size_t second = m_MazePath[i - 1];
+					DrawEdge(Graph::Edge(first, second, 1), olc::GREEN);
+				}
+			}
 		}
 	}
 #else
@@ -158,7 +186,14 @@ public:
 public:
 	bool OnUserCreate() override
 	{
-		m_MstAlgorithm->MST(m_Mst, m_EdgeIncluded, (bool)DRAW_MAZE);
+		m_Maze = m_MstAlgorithm->MST(m_Mst, m_EdgeIncluded, (bool)DRAW_MAZE);
+#if DRAW_MAZE
+		if (m_PathType == Pathfinding::BFS)
+			m_PathfindingAlgorithm = std::make_unique<BFS>(m_Maze);
+		else if (m_PathType == Pathfinding::DFS)
+			m_PathfindingAlgorithm = std::make_unique<BFS>(m_Maze);
+		m_MazePath = m_PathfindingAlgorithm->FindPath(START_VERTEX, END_VERTEX, m_EdgesExplored);
+#endif
 		return true;
 	}
 	bool OnUserUpdate(float fElapsedTime) override
@@ -167,6 +202,7 @@ public:
 #if USER_ANIMATION_CONTROL
 #if DRAW_MAZE
 		if ((GetKey(olc::Key::ENTER).bPressed || GetKey(olc::Key::ENTER).bHeld) && (m_CurrentIndex < m_Mst.size() - 1 || m_CurrentIndex == -1)) m_CurrentIndex++;
+		if ((GetKey(olc::Key::ENTER).bPressed || GetKey(olc::Key::ENTER).bHeld) && m_CurrentIndex == m_Mst.size() - 1 && (m_PathCurrentIndex < m_EdgesExplored.size()-1 || m_PathCurrentIndex == -1)) m_PathCurrentIndex++;
 #else
 		if (GetKey(olc::Key::ENTER).bPressed && (m_CurrentIndex < m_Mst.size() - 1 || m_CurrentIndex == -1)) m_CurrentIndex++;
 #endif
@@ -176,6 +212,13 @@ public:
 			m_Time = TIME_BETWEEN_FRAMES;
 			m_CurrentIndex++;
 		}
+#if DRAW_MAZE
+		if (m_Time <= 0 && m_CurrentIndex == m_Mst.size() - 1 && (m_PathCurrentIndex < m_EdgesExplored.size() - 1 || m_PathCurrentIndex == -1))
+		{
+			m_Time = TIME_BETWEEN_FRAMES;
+			m_PathCurrentIndex++;
+		}
+#endif
 #endif
 		UpdateGraphics();
 		return true;
@@ -185,12 +228,13 @@ public:
 #if DRAW_MAZE
 void BuildGridGraph(Graph* graph)
 {
-	size_t ROOT = (size_t)sqrt(graph->m_VertexCount);
-	for (size_t vertex = 1; vertex <= graph->m_VertexCount; vertex++)
+	size_t ROOT = (size_t)sqrt(graph->m_VertexCount-2);
+	size_t normalizedCount = graph->m_VertexCount - 2;
+	for (size_t vertex = 1; vertex <= graph->m_VertexCount-2; vertex++)
 	{
 		std::random_device randomDevice;
 		std::mt19937 engine(randomDevice());
-		std::uniform_int_distribution<> edgeDistribution(0, 9999);
+		std::uniform_int_distribution<> edgeDistribution(2, 9999);
 		size_t edgeValue = edgeDistribution(engine);
 		// Top-left corner
 		if (vertex == 1)
@@ -205,13 +249,13 @@ void BuildGridGraph(Graph* graph)
 			graph->AddEdge(vertex, vertex + ROOT, edgeValue);
 		}
 		// Bottom-left corner
-		else if (vertex == graph->m_VertexCount - ROOT + 1)
+		else if (vertex == normalizedCount - ROOT + 1)
 		{
 			graph->AddEdge(vertex, vertex + 1, edgeValue);
 			graph->AddEdge(vertex, vertex - ROOT, edgeValue);
 		}
 		// Bottom-right corner
-		else if (vertex == graph->m_VertexCount)
+		else if (vertex == normalizedCount)
 		{
 			graph->AddEdge(vertex, vertex - 1, edgeValue);
 			graph->AddEdge(vertex, vertex - ROOT, edgeValue);
@@ -224,21 +268,21 @@ void BuildGridGraph(Graph* graph)
 			graph->AddEdge(vertex, vertex + ROOT, edgeValue);
 		}
 		// Bottom edge
-		else if (vertex > graph->m_VertexCount - ROOT + 1 && vertex < graph->m_VertexCount)
+		else if (vertex > normalizedCount - ROOT + 1 && vertex < normalizedCount)
 		{
 			graph->AddEdge(vertex, vertex - 1, edgeValue);
 			graph->AddEdge(vertex, vertex + 1, edgeValue);
 			graph->AddEdge(vertex, vertex - ROOT, edgeValue);
 		}
 		// Left edge
-		else if (vertex % ROOT == 1 && (vertex > ROOT && vertex < graph->m_VertexCount - ROOT + 1))
+		else if (vertex % ROOT == 1 && (vertex > ROOT && vertex < normalizedCount - ROOT + 1))
 		{
 			graph->AddEdge(vertex, vertex + ROOT, edgeValue);
 			graph->AddEdge(vertex, vertex - ROOT, edgeValue);
 			graph->AddEdge(vertex, vertex + 1, edgeValue);
 		}
 		// Right edge
-		else if (vertex % ROOT == 0 && (vertex > ROOT && vertex < graph->m_VertexCount - ROOT + 1))
+		else if (vertex % ROOT == 0 && (vertex > ROOT && vertex < normalizedCount - ROOT + 1))
 		{
 			graph->AddEdge(vertex, vertex + ROOT, edgeValue);
 			graph->AddEdge(vertex, vertex - ROOT, edgeValue);
@@ -252,17 +296,20 @@ void BuildGridGraph(Graph* graph)
 			graph->AddEdge(vertex, vertex - 1, edgeValue);
 			graph->AddEdge(vertex, vertex + 1, edgeValue);
 		}
+		graph->AddEdge(START_VERTEX, 1, 1); // Start vertex
+		graph->AddEdge(END_VERTEX, MAZE_GRAPH_VERTICES*MAZE_GRAPH_VERTICES, 1); // End vertex
 	}
+
 }
 #endif
 
 int main()
 {
 #if DRAW_MAZE
-	Graph graph(MAZE_GRAPH_VERTICES*MAZE_GRAPH_VERTICES);
+	Graph graph(MAZE_GRAPH_VERTICES*MAZE_GRAPH_VERTICES + 2);
 	BuildGridGraph(&graph);
 	GraphAlgorithms demo(&graph);
-	if (demo.Construct(2* MAZE_GRAPH_VERTICES+1, 2* MAZE_GRAPH_VERTICES+1, VERTEX_SCALE, VERTEX_SCALE))
+	if (demo.Construct(2 * MAZE_GRAPH_VERTICES + 1, 2 * MAZE_GRAPH_VERTICES + 1, VERTEX_SCALE, VERTEX_SCALE))
 		demo.Start();
 #else
 	Graph graph(9); // Build example graph with 9 vertices

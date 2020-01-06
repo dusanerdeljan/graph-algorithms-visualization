@@ -14,8 +14,9 @@ struct PQEntry
 	PQEntry(size_t c, size_t v, Graph::Edge* e) : cost(c), vertex(v), edge(e) {}
 };
 
-void PrimJarnik::MST(std::vector<Graph::Edge>& mst, std::vector<bool>& edgeIncluded, bool maze)
+Graph* PrimJarnik::MST(std::vector<Graph::Edge>& mst, std::vector<bool>& edgeIncluded, bool maze)
 {
+	Graph* mstGraph = maze ? new Graph(m_Graph->m_VertexCount) : nullptr;
 	std::unordered_map<size_t, size_t> treeBounds;
 	std::vector<PQEntry*> priorityQueue;
 	std::unordered_map<size_t, PQEntry> entryMap;
@@ -32,6 +33,7 @@ void PrimJarnik::MST(std::vector<Graph::Edge>& mst, std::vector<bool>& edgeInclu
 		priorityQueue.pop_back();
 		if (minElement->edge != nullptr)
 		{
+			if (maze) mstGraph->AddEdge(minElement->edge);
 			mst.push_back(*minElement->edge);
 			edgeIncluded.push_back(true);
 		}
@@ -53,4 +55,5 @@ void PrimJarnik::MST(std::vector<Graph::Edge>& mst, std::vector<bool>& edgeInclu
 		delete entryMap[minElement->vertex].edge;
 		entryMap.erase(minElement->vertex);
 	}
+	return mstGraph;
 }

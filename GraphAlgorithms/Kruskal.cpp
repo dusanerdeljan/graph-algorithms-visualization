@@ -2,8 +2,9 @@
 #include "Partition.h"
 #include <algorithm>
 
-void Kruskal::MST(std::vector<Graph::Edge>& mst, std::vector<bool>& edgeIncluded, bool maze)
+Graph* Kruskal::MST(std::vector<Graph::Edge>& mst, std::vector<bool>& edgeIncluded, bool maze)
 {
+	Graph* mstGraph = maze ? new Graph(m_Graph->m_VertexCount) : nullptr;
 	size_t i = 0;
 	std::sort(m_Edges.begin(), m_Edges.end(), [](const Graph::Edge& e1, const Graph::Edge& e2)
 		{
@@ -18,10 +19,15 @@ void Kruskal::MST(std::vector<Graph::Edge>& mst, std::vector<bool>& edgeIncluded
 		if (!partition.DoesMakeCycle(edge))
 		{
 			mstVertices++;
-			if (maze) mst.push_back(edge);
+			if (maze)
+			{
+				mstGraph->AddEdge(&edge);
+				mst.push_back(edge);
+			}
 			edgeIncluded.push_back(true);
 			partition.AddEdge(edge);
 		}
 		else if (!maze) edgeIncluded.push_back(false);
 	}
+	return mstGraph;
 }
