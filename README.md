@@ -9,10 +9,10 @@ Currently supported algorithms:
  * Kruskal MST maze generation
  * DFS
  * BFS
- * Dijsktra
+ * Dijkstra
  * A*
  
-## Dijsktra's algorithm - Maze solving example
+## Dijkstra's algorithm - Maze solving example
 
 <img width="60%" src="GIFs/dijkstra.png">
 
