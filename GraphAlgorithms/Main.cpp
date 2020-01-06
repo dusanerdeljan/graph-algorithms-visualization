@@ -7,6 +7,8 @@
 #include "PathfindingAlgorithm.h"
 #include "BFS.h"
 #include "DFS.h"
+#include "Dijkstra.h"
+#include "AStar.h"
 #include <iostream>
 #include <math.h>
 #include <memory>
@@ -34,7 +36,7 @@
 #endif
 
 enum class Algorithm {PRIM_JARNIK, KRUSKAL};
-enum class Pathfinding { BFS, DFS };
+enum class Pathfinding { BFS, DFS, DIJKSTRA, ASTAR };
 
 class GraphAlgorithms : public olc::PixelGameEngine
 {
@@ -53,7 +55,7 @@ private:
 	std::vector<size_t> m_MazePath;
 	std::vector<Graph::Edge> m_EdgesExplored;
 	std::unique_ptr<PathfindingAlgorithm> m_PathfindingAlgorithm;
-	Pathfinding m_PathType = Pathfinding::DFS;
+	Pathfinding m_PathType = Pathfinding::DIJKSTRA;
 	size_t m_PathCurrentIndex = -1;
 #endif
 private:
@@ -192,6 +194,10 @@ public:
 			m_PathfindingAlgorithm = std::make_unique<BFS>(m_Maze);
 		else if (m_PathType == Pathfinding::DFS)
 			m_PathfindingAlgorithm = std::make_unique<BFS>(m_Maze);
+		else if (m_PathType == Pathfinding::DIJKSTRA)
+			m_PathfindingAlgorithm = std::make_unique<Dijkstra>(m_Maze);
+		else if (m_PathType == Pathfinding::ASTAR)
+			m_PathfindingAlgorithm = std::make_unique<AStar>(m_Maze);
 		m_MazePath = m_PathfindingAlgorithm->FindPath(START_VERTEX, END_VERTEX, m_EdgesExplored);
 #endif
 		return true;
@@ -215,7 +221,7 @@ public:
 #if DRAW_MAZE
 		if (m_Time <= 0 && m_CurrentIndex == m_Mst.size() - 1 && (m_PathCurrentIndex < m_EdgesExplored.size() - 1 || m_PathCurrentIndex == -1))
 		{
-			m_Time = TIME_BETWEEN_FRAMES;
+			m_Time = TIME_BETWEEN_FRAMES/10;
 			m_PathCurrentIndex++;
 		}
 #endif

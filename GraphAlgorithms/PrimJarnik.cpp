@@ -22,9 +22,9 @@ Graph* PrimJarnik::MST(std::vector<Graph::Edge>& mst, std::vector<bool>& edgeInc
 	std::unordered_map<size_t, PQEntry> entryMap;
 	for (size_t vertex = 0; vertex < m_Graph->m_VertexCount; vertex++)
 	{
-		treeBounds[vertex+1] = treeBounds.size() == 0 ? 0 : INF;
-		entryMap[vertex+1] = PQEntry(treeBounds[vertex+1], vertex+1, nullptr);
-		priorityQueue.push_back(&entryMap[vertex+1]);
+		treeBounds[vertex + 1] = treeBounds.size() == 0 ? 0 : INF;
+		entryMap[vertex + 1] = PQEntry(treeBounds[vertex + 1], vertex + 1, nullptr);
+		priorityQueue.push_back(&entryMap[vertex + 1]);
 	}
 	std::sort(priorityQueue.begin(), priorityQueue.end(), [](PQEntry* a, PQEntry* b) { return a->cost > b->cost; });
 	while (!priorityQueue.empty())
