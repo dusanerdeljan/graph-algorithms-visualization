@@ -5,10 +5,7 @@
 #include "Kruskal.h"
 #include "PrimJarnik.h"
 #include "PathfindingAlgorithm.h"
-#include "BFS.h"
-#include "DFS.h"
-#include "Dijkstra.h"
-#include "AStar.h"
+#include "PathfindingAlgorithmFactory.h"
 #include <iostream>
 #include <math.h>
 #include <memory>
@@ -36,7 +33,7 @@
 #endif
 
 enum class Algorithm {PRIM_JARNIK, KRUSKAL};
-enum class Pathfinding { BFS, DFS, DIJKSTRA, ASTAR };
+typedef PathfindingAlgorithmFactory::Pathfinding Pathfinding;
 
 class GraphAlgorithms : public olc::PixelGameEngine
 {
@@ -54,7 +51,7 @@ private:
 #if DRAW_MAZE
 	std::vector<size_t> m_MazePath;
 	std::vector<Graph::Edge> m_EdgesExplored;
-	std::unique_ptr<PathfindingAlgorithm> m_PathfindingAlgorithm;
+	std::shared_ptr<PathfindingAlgorithm> m_PathfindingAlgorithm;
 	Pathfinding m_PathType = Pathfinding::DIJKSTRA;
 	size_t m_PathCurrentIndex = -1;
 #endif
@@ -190,14 +187,7 @@ public:
 	{
 		m_Maze = m_MstAlgorithm->MST(m_Mst, m_EdgeIncluded, (bool)DRAW_MAZE);
 #if DRAW_MAZE
-		if (m_PathType == Pathfinding::BFS)
-			m_PathfindingAlgorithm = std::make_unique<BFS>(m_Maze);
-		else if (m_PathType == Pathfinding::DFS)
-			m_PathfindingAlgorithm = std::make_unique<BFS>(m_Maze);
-		else if (m_PathType == Pathfinding::DIJKSTRA)
-			m_PathfindingAlgorithm = std::make_unique<Dijkstra>(m_Maze);
-		else if (m_PathType == Pathfinding::ASTAR)
-			m_PathfindingAlgorithm = std::make_unique<AStar>(m_Maze);
+		m_PathfindingAlgorithm = PathfindingAlgorithmFactory::GetPathfindingAlgorithm(m_PathType, m_Maze);
 		m_MazePath = m_PathfindingAlgorithm->FindPath(START_VERTEX, END_VERTEX, m_EdgesExplored);
 #endif
 		return true;
