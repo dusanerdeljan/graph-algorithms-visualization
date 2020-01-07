@@ -52,3 +52,9 @@ To generate a maze, set **_DRAW_MAZE_** macro to **1** (by default it is 0) and,
 To control the speed of the animation, set **_TIME_BETWEEN_FRAMES_** macro to desired value (in seconds). <br/>
 To change which algorithm will be used for MST (or maze generation), set **_m_Type_** attribute of the **_GraphAlgorithms_** class to desired value.<br/>
 To change which algorithm will be used for maze solving, set **_m_PathType_** attribute of the **_GraphAlgorithms_** class to desired value.
+
+## License
+
+This program is free.</br>
+You can redistribute it and/or change it under the terms of **GNU General Public License version 3.0** (GPLv3). </br>
+You can find a copy of the license in the repository.
