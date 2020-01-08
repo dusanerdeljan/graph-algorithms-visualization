@@ -41,7 +41,7 @@ Graph* Kruskal::MST(std::vector<Graph::Edge>& mst, std::vector<bool>& edgeInclud
 			mstVertices++;
 			if (maze)
 			{
-				mstGraph->AddEdge(&edge);
+				mstGraph->AddEdge(edge.vertexA, edge.vertexB, 1);
 				mst.push_back(edge);
 			}
 			edgeIncluded.push_back(true);

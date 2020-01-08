@@ -53,7 +53,7 @@ Graph* PrimJarnik::MST(std::vector<Graph::Edge>& mst, std::vector<bool>& edgeInc
 		priorityQueue.pop_back();
 		if (minElement->edge != nullptr)
 		{
-			if (maze) mstGraph->AddEdge(minElement->edge);
+			if (maze) mstGraph->AddEdge(minElement->edge->vertexA, minElement->edge->vertexB, 1);
 			mst.push_back(*minElement->edge);
 			edgeIncluded.push_back(true);
 		}

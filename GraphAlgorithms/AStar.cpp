@@ -62,7 +62,7 @@ std::vector<size_t> AStar::FindPath(size_t startVertex, size_t endVertex, std::v
 			size_t neighbour = edge.vertexB;
 			// We assusme that the end vertex is at the bottom right corner of the graph
 			float remainingDistance = abs(ROOT-1 - ((int)currentVertex-1)%ROOT) + abs(ROOT-1 - (int)(currentVertex-1)/ROOT);
-			float newDistance = distanes[currentVertex];
+			float newDistance = distanes[currentVertex] + edge.cost;
 			if (visitedVertices.find(neighbour) == visitedVertices.end())
 			{
 				if (newDistance < distanes[neighbour])

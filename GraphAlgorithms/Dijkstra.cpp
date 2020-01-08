@@ -59,7 +59,7 @@ std::vector<size_t> Dijkstra::FindPath(size_t startVertex, size_t endVertex, std
 		for (auto const& edge : incidentEdges)
 		{
 			size_t neighbour = edge.vertexB;
-			size_t newDistance = distanes[currentVertex];
+			size_t newDistance = distanes[currentVertex] + edge.cost;
 			if (visitedVertices.find(neighbour) == visitedVertices.end())
 			{
 				if (newDistance < distanes[neighbour])
