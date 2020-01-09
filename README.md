@@ -5,8 +5,10 @@ Graph algorithms visualization made using olcPixelGameEngine (Visual Studio 2015
 Currently supported algorithms:
  * Prim-Jarnik MST
  * Kruskal MST
+ * Boruvka MST
  * Prim-Jarnik MST maze generation
  * Kruskal MST maze generation
+ * Boruvka MST maze generation
  * DFS
  * BFS
  * Dijkstra
