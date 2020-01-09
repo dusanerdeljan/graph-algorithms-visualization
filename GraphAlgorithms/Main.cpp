@@ -22,9 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>
 #include "olcPixelGameEngine.h"
 #include "Graph.h"
 #include "MSTAlgorithm.h"
-#include "Kruskal.h"
-#include "PrimJarnik.h"
-#include "Boruvka.h"
+#include "MSTAlgorithmFactory.h"
 #include "PathfindingAlgorithm.h"
 #include "PathfindingAlgorithmFactory.h"
 #include <iostream>
@@ -53,7 +51,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>
 #define TIME_BETWEEN_FRAMES 1.0f
 #endif
 
-enum class Algorithm {PRIM_JARNIK, KRUSKAL, BORUVKA};
+typedef MSTAlgorithmFactory::Algorithm Algorithm;
 typedef PathfindingAlgorithmFactory::Pathfinding Pathfinding;
 
 class GraphAlgorithms : public olc::PixelGameEngine
@@ -64,7 +62,7 @@ private:
 	std::vector<Graph::Edge> m_Mst;
 	std::vector<bool> m_EdgeIncluded;
 	Algorithm m_Type = Algorithm::KRUSKAL;
-	std::unique_ptr<MSTAlgorithm> m_MstAlgorithm;
+	std::shared_ptr<MSTAlgorithm> m_MstAlgorithm;
 	size_t m_CurrentIndex = -1;
 	std::set<size_t> m_VertexSet;
 	float m_Time = TIME_BETWEEN_FRAMES;
@@ -116,9 +114,7 @@ public:
 	{
 		m_Angle = (360.0f / graph->m_VertexCount) * 0.0174532925f;
 		sAppName = "Kruskal & Prim-Jarnik Algorithm";
-		if (m_Type == Algorithm::KRUSKAL) m_MstAlgorithm = std::make_unique<Kruskal>(m_Graph);
-		else if (m_Type == Algorithm::PRIM_JARNIK) m_MstAlgorithm = std::make_unique<PrimJarnik>(m_Graph);
-		else m_MstAlgorithm = std::make_unique<Boruvka>(m_Graph);
+		m_MstAlgorithm = MSTAlgorithmFactory::GetMSTAlgorithm(m_Type, m_Graph);
 	}
 #if DRAW_MAZE
 	void UpdateGraphics()

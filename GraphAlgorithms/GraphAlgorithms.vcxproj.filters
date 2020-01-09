@@ -54,6 +54,9 @@
     <ClCompile Include="Boruvka.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MSTAlgorithmFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graph.h">
@@ -93,6 +96,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Boruvka.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MSTAlgorithmFactory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -119,6 +119,7 @@
     <ClCompile Include="Kruskal.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MSTAlgorithm.cpp" />
+    <ClCompile Include="MSTAlgorithmFactory.cpp" />
     <ClCompile Include="Partition.cpp" />
     <ClCompile Include="PathfindingAlgorithm.cpp" />
     <ClCompile Include="PathfindingAlgorithmFactory.cpp" />
@@ -133,6 +134,7 @@
     <ClInclude Include="Graph.h" />
     <ClInclude Include="Kruskal.h" />
     <ClInclude Include="MSTAlgorithm.h" />
+    <ClInclude Include="MSTAlgorithmFactory.h" />
     <ClInclude Include="olcPixelGameEngine.h" />
     <ClInclude Include="Partition.h" />
     <ClInclude Include="PathfindingAlgorithm.h" />
