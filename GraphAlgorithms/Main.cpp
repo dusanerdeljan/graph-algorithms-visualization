@@ -24,6 +24,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>
 #include "MSTAlgorithm.h"
 #include "Kruskal.h"
 #include "PrimJarnik.h"
+#include "Boruvka.h"
 #include "PathfindingAlgorithm.h"
 #include "PathfindingAlgorithmFactory.h"
 #include <iostream>
@@ -52,7 +53,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>
 #define TIME_BETWEEN_FRAMES 1.0f
 #endif
 
-enum class Algorithm {PRIM_JARNIK, KRUSKAL};
+enum class Algorithm {PRIM_JARNIK, KRUSKAL, BORUVKA};
 typedef PathfindingAlgorithmFactory::Pathfinding Pathfinding;
 
 class GraphAlgorithms : public olc::PixelGameEngine
@@ -116,7 +117,8 @@ public:
 		m_Angle = (360.0f / graph->m_VertexCount) * 0.0174532925f;
 		sAppName = "Kruskal & Prim-Jarnik Algorithm";
 		if (m_Type == Algorithm::KRUSKAL) m_MstAlgorithm = std::make_unique<Kruskal>(m_Graph);
-		else m_MstAlgorithm = std::make_unique<PrimJarnik>(m_Graph);
+		else if (m_Type == Algorithm::PRIM_JARNIK) m_MstAlgorithm = std::make_unique<PrimJarnik>(m_Graph);
+		else m_MstAlgorithm = std::make_unique<Boruvka>(m_Graph);
 	}
 #if DRAW_MAZE
 	void UpdateGraphics()

@@ -112,6 +112,7 @@
   <ItemGroup>
     <ClCompile Include="AStar.cpp" />
     <ClCompile Include="BFS.cpp" />
+    <ClCompile Include="Boruvka.cpp" />
     <ClCompile Include="DFS.cpp" />
     <ClCompile Include="Dijkstra.cpp" />
     <ClCompile Include="Graph.cpp" />
@@ -126,6 +127,7 @@
   <ItemGroup>
     <ClInclude Include="AStar.h" />
     <ClInclude Include="BFS.h" />
+    <ClInclude Include="Boruvka.h" />
     <ClInclude Include="DFS.h" />
     <ClInclude Include="Dijkstra.h" />
     <ClInclude Include="Graph.h" />
