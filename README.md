@@ -38,13 +38,21 @@ Currently supported algorithms:
 
 !["Prim-Jarnik algorithm visualization"](GIFs/prim-jarnik.gif)
 
+## Boruvka algorithm visualization example
+
+!["Boruvka algorithm visualization example"](GIFs/boruvka.gif)
+
 ## Kruskal MST maze generation example
 
 !["Kruskal MST maze generation"](GIFs/kruskal-maze.gif)
 
 ## Prim-Jarnik MST maze generation example
  
- !["Prim-Jarnik MST maze generation"](GIFs/prim-jarnik-maze.gif)
+!["Prim-Jarnik MST maze generation"](GIFs/prim-jarnik-maze.gif)
+ 
+## Boruvka MST maze generation example
+
+!["Boruvka MST maze generation"](GIFs/boruvka-maze.gif)
  
 ## Controls
 
