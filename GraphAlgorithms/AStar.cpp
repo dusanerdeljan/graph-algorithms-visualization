@@ -23,21 +23,21 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>
 #include <unordered_map>
 #include <algorithm>
 
-#define INFF 9999999.9f
+#define INFF 9999999
 
 struct HeapEntryAStar
 {
 	size_t vertex;
-	float distance;
+	size_t distance;
 	HeapEntryAStar() : vertex(999999), distance(INFF) {}
-	HeapEntryAStar(size_t v, float d) : vertex(v), distance(d) {}
+	HeapEntryAStar(size_t v, size_t d) : vertex(v), distance(d) {}
 };
 
 std::vector<size_t> AStar::FindPath(size_t startVertex, size_t endVertex, std::vector<Graph::Edge>& edgesExplored) const
 {
 	int ROOT = (int)sqrt(m_Maze->m_VertexCount - 2);
 	std::vector<size_t> path;
-	std::unordered_map<size_t, float> distanes;
+	std::unordered_map<size_t, size_t> distanes;
 	for (size_t vertex = 1; vertex <= m_Maze->m_VertexCount; vertex++)
 	{
 		distanes[vertex] = INFF;
@@ -47,7 +47,7 @@ std::vector<size_t> AStar::FindPath(size_t startVertex, size_t endVertex, std::v
 	std::vector<HeapEntryAStar*> unvisitedNodes;
 	size_t* parentMap = new size_t[m_Maze->m_VertexCount + 1];
 	distanes[startVertex] = 0;
-	entryMap[startVertex] = HeapEntryAStar(startVertex, 0.0f);
+	entryMap[startVertex] = HeapEntryAStar(startVertex, 0);
 	unvisitedNodes.push_back(&entryMap[startVertex]);
 	while (!unvisitedNodes.empty())
 	{
@@ -61,8 +61,8 @@ std::vector<size_t> AStar::FindPath(size_t startVertex, size_t endVertex, std::v
 		{
 			size_t neighbour = edge.vertexB;
 			// We assusme that the end vertex is at the bottom right corner of the graph
-			float remainingDistance = abs(ROOT-1 - ((int)currentVertex-1)%ROOT) + abs(ROOT-1 - (int)(currentVertex-1)/ROOT);
-			float newDistance = distanes[currentVertex] + edge.cost;
+			size_t remainingDistance = abs(ROOT-1 - ((int)currentVertex-1)%ROOT) + abs(ROOT-1 - (int)(currentVertex-1)/ROOT);
+			size_t newDistance = distanes[currentVertex] + edge.cost;
 			if (visitedVertices.find(neighbour) == visitedVertices.end())
 			{
 				if (newDistance < distanes[neighbour])
