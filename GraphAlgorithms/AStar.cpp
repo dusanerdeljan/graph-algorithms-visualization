@@ -33,6 +33,46 @@ struct HeapEntryAStar
 	HeapEntryAStar(size_t v, size_t d) : vertex(v), distance(d) {}
 };
 
+/*
+1	// A* finds a path from start to goal.
+2	// h is the heuristic function. h(n) estimates the cost to reach goal from node n.
+3	function A_Star(start, goal, h)
+4		// The set of discovered nodes that may need to be (re-)expanded.
+5		// Initially, only the start node is known.
+6		openSet := {start}
+7
+8		// For node n, cameFrom[n] is the node immediately preceding it on the cheapest path from start to n currently known.
+9		cameFrom := an empty map
+10
+11		// For node n, gScore[n] is the cost of the cheapest path from start to n currently known.
+12		gScore := map with default value of Infinity
+13		gScore[start] := 0
+14
+15		// For node n, fScore[n] := gScore[n] + h(n).
+16		fScore := map with default value of Infinity
+17		fScore[start] := h(start)
+18
+19		while openSet is not empty
+20			current := the node in openSet having the lowest fScore[] value
+21			if current = goal
+22				return reconstruct_path(cameFrom, current)
+23
+24			openSet.Remove(current)
+25			for each neighbor of current
+26				// d(current,neighbor) is the weight of the edge from current to neighbor
+27				// tentative_gScore is the distance from start to the neighbor through current
+28				tentative_gScore := gScore[current] + d(current, neighbor)
+29				if tentative_gScore < gScore[neighbor]
+30				// This path to neighbor is better than any previous one. Record it!
+31					cameFrom[neighbor] := current
+32					gScore[neighbor] := tentative_gScore
+33					fScore[neighbor] := gScore[neighbor] + h(neighbor)
+34					if neighbor not in openSet
+35						openSet.add(neighbor)
+36
+37	// Open set is empty but goal was never reached
+38	return failure
+*/
 std::vector<size_t> AStar::FindPath(size_t startVertex, size_t endVertex, std::vector<Graph::Edge>& edgesExplored) const
 {
 	int ROOT = (int)sqrt(m_Maze->m_VertexCount - 2);

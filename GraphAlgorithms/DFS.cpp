@@ -22,6 +22,17 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>
 #include <stack>
 #include <set>
 
+/*
+1	procedure DFS-iterative(G, v) is
+2		let S be a stack
+3		S.push(v)
+4		while S is not empty do
+5			v = S.pop()
+6			if v is not labeled as discovered then
+7				label v as discovered
+8				for all edges from v to w in G.adjacentEdges(v) do
+9					S.push(w)
+*/
 std::vector<size_t> DFS::FindPath(size_t startVertex, size_t endVertex, std::vector<Graph::Edge>& edgesExplored) const
 {
 	std::vector<size_t> path;
