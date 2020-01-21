@@ -20,17 +20,17 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>
 
 #include "MSTAlgorithmFactory.h"
 
-std::shared_ptr<MSTAlgorithm> MSTAlgorithmFactory::GetMSTAlgorithm(MSTAlgorithmFactory::Algorithm type, Graph * graph)
+std::unique_ptr<MSTAlgorithm> MSTAlgorithmFactory::GetMSTAlgorithm(MSTAlgorithmFactory::Algorithm type, Graph * graph)
 {
 	switch (type)
 	{
 	case MSTAlgorithmFactory::Algorithm::PRIM_JARNIK:
-		return std::make_shared<PrimJarnik>(graph);
+		return std::make_unique<PrimJarnik>(graph);
 	case MSTAlgorithmFactory::Algorithm::KRUSKAL:
-		return std::make_shared<Kruskal>(graph);
+		return std::make_unique<Kruskal>(graph);
 	case MSTAlgorithmFactory::Algorithm::BORUVKA:
-		return std::make_shared<Boruvka>(graph);
+		return std::make_unique<Boruvka>(graph);
 	default:
-		return std::make_shared<Kruskal>(graph);
+		return std::make_unique<Kruskal>(graph);
 	}
 }

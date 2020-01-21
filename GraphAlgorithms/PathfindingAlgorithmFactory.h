@@ -31,6 +31,6 @@ class PathfindingAlgorithmFactory
 {
 public:
 	enum class Pathfinding { BFS, DFS, DIJKSTRA, ASTAR };
-	static std::shared_ptr<PathfindingAlgorithm> GetPathfindingAlgorithm(Pathfinding type, Graph* maze);
+	static std::unique_ptr<PathfindingAlgorithm> GetPathfindingAlgorithm(Pathfinding type, Graph* maze);
 };
 

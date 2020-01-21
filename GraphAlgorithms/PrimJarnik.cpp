@@ -34,27 +34,9 @@ struct PQEntry
 	PQEntry(size_t c, size_t v, Graph::Edge* e) : cost(c), vertex(v), edge(e) {}
 };
 
-/*
-1	ReachSet = {0};                    // You can use any node...
-2	UnReachSet = {1, 2, ..., N-1};
-3	SpanningTree = {};
-4
-5	while ( UnReachSet ≠ empty )
-6	{
-7		Find edge e = (x, y) such that:
-8			1. x ∈ ReachSet
-9			2. y ∈ UnReachSet
-10			3. e has smallest cost
-11
-12		SpanningTree = SpanningTree ∪ {e};
-13
-14		ReachSet   = ReachSet ∪ {y};
-15		UnReachSet = UnReachSet - {y};
-16	}
-*/
-Graph* PrimJarnik::MST(std::vector<Graph::Edge>& mst, std::vector<bool>& edgeIncluded, bool maze)
+std::unique_ptr<Graph> PrimJarnik::MST(std::vector<Graph::Edge>& mst, std::vector<bool>& edgeIncluded, bool maze)
 {
-	Graph* mstGraph = maze ? new Graph(m_Graph->m_VertexCount) : nullptr;
+	std::unique_ptr<Graph> mstGraph = maze ? std::make_unique<Graph>(m_Graph->m_VertexCount) : nullptr;
 	std::unordered_map<size_t, size_t> treeBounds;
 	std::vector<PQEntry*> priorityQueue;
 	std::unordered_map<size_t, PQEntry> entryMap;

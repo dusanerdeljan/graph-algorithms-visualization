@@ -21,28 +21,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>
 #include "Boruvka.h"
 #include "Partition.h"
 
-/*
-1	algorithm Borůvka is
-2		input: A graph G whose edges have distinct weights.
-3		output: F is the minimum spanning forest of G.
-4
-5		Initialize a forest F to be a set of one-vertex trees, one for each vertex of the graph.
-6
-7		while F has more than one component do
-8			Find the connected components of F and label each vertex of G by its component
-9			Initialize the cheapest edge for each component to "None"
-10			for each edge uv of G do
-11				if u and v have different component labels:
-12					if uv is cheaper than the cheapest edge for the component of u then
-13						Set uv as the cheapest edge for the component of u
-14					if uv is cheaper than the cheapest edge for the component of v then
-15						Set uv as the cheapest edge for the component of v
-16		for each component whose cheapest edge is not "None" do
-17			Add its cheapest edge to F
-*/
-Graph * Boruvka::MST(std::vector<Graph::Edge>& mst, std::vector<bool>& edgeIncluded, bool maze)
+std::unique_ptr<Graph> Boruvka::MST(std::vector<Graph::Edge>& mst, std::vector<bool>& edgeIncluded, bool maze)
 {
-	Graph* mstGraph = maze ? new Graph(m_Graph->m_VertexCount) : nullptr;
+	std::unique_ptr<Graph> mstGraph = maze ? std::make_unique<Graph>(m_Graph->m_VertexCount) : nullptr;
 	Partition partition(m_Graph->m_VertexCount);
 	int* cheapest = new int[m_Graph->m_VertexCount+1];
 	for (size_t i = 0; i <= m_Graph->m_VertexCount; i++) cheapest[i] = -1;

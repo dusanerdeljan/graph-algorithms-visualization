@@ -29,6 +29,6 @@ class MSTAlgorithmFactory
 {
 public:
 	enum class Algorithm { PRIM_JARNIK, KRUSKAL, BORUVKA };
-	static std::shared_ptr<MSTAlgorithm> GetMSTAlgorithm(MSTAlgorithmFactory::Algorithm type, Graph* graph);
+	static std::unique_ptr<MSTAlgorithm> GetMSTAlgorithm(MSTAlgorithmFactory::Algorithm type, Graph* graph);
 };
 

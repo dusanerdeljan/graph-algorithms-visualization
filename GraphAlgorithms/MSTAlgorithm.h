@@ -20,6 +20,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>
 
 #pragma once
 #include "Graph.h"
+#include <memory>
+
 class MSTAlgorithm
 {
 protected:
@@ -27,6 +29,6 @@ protected:
 	std::vector<Graph::Edge> m_Edges;
 public:
 	MSTAlgorithm(Graph* graph);
-	virtual Graph* MST(std::vector<Graph::Edge>& mst, std::vector<bool>& edgeIncluded, bool maze=false) = 0;
+	virtual std::unique_ptr<Graph> MST(std::vector<Graph::Edge>& mst, std::vector<bool>& edgeIncluded, bool maze = false) = 0;
 };
 

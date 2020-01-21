@@ -62,15 +62,15 @@ private:
 	std::vector<Graph::Edge> m_Mst;
 	std::vector<bool> m_EdgeIncluded;
 	Algorithm m_Type = Algorithm::KRUSKAL;
-	std::shared_ptr<MSTAlgorithm> m_MstAlgorithm;
+	std::unique_ptr<MSTAlgorithm> m_MstAlgorithm;
 	size_t m_CurrentIndex = -1;
 	std::set<size_t> m_VertexSet;
 	float m_Time = TIME_BETWEEN_FRAMES;
-	Graph* m_Maze;
+	std::unique_ptr<Graph> m_Maze;
 #if DRAW_MAZE
 	std::vector<size_t> m_MazePath;
 	std::vector<Graph::Edge> m_EdgesExplored;
-	std::shared_ptr<PathfindingAlgorithm> m_PathfindingAlgorithm;
+	std::unique_ptr<PathfindingAlgorithm> m_PathfindingAlgorithm;
 	Pathfinding m_PathType = Pathfinding::DIJKSTRA;
 	size_t m_PathCurrentIndex = -1;
 #endif
@@ -205,7 +205,7 @@ public:
 	{
 		m_Maze = m_MstAlgorithm->MST(m_Mst, m_EdgeIncluded, (bool)DRAW_MAZE);
 #if DRAW_MAZE
-		m_PathfindingAlgorithm = PathfindingAlgorithmFactory::GetPathfindingAlgorithm(m_PathType, m_Maze);
+		m_PathfindingAlgorithm = PathfindingAlgorithmFactory::GetPathfindingAlgorithm(m_PathType, m_Maze.get());
 		m_MazePath = m_PathfindingAlgorithm->FindPath(START_VERTEX, END_VERTEX, m_EdgesExplored);
 #endif
 		return true;

@@ -22,21 +22,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>
 #include <queue>
 #include <set>
 
-/*
-1  procedure BFS(G, start_v) is
-2      let Q be a queue
-3      label start_v as discovered
-4      Q.enqueue(start_v)
-5      while Q is not empty do
-6          v := Q.dequeue()
-7          if v is the goal then
-8              return v
-9          for all edges from v to w in G.adjacentEdges(v) do
-10             if w is not labeled as discovered then
-11                 label w as discovered
-12                 w.parent := v
-13                 Q.enqueue(w)
-*/
 std::vector<size_t> BFS::FindPath(size_t startVertex, size_t endVertex, std::vector<Graph::Edge>& edgesExplored) const
 {
 	std::vector<size_t> path;
